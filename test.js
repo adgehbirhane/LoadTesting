@@ -2,23 +2,27 @@
 const childProc = require("child_process");
 const { performance } = require('perf_hooks');
 const CHILD_PROCESSES = 20;
-const URL = 'http://localhost:3000';
+const URL = 'https://northshewadiocese.netlify.app/';
 
 (async () => {
   let responseTimes = [];
   let children = [];
 
   for (let i = 0; i < CHILD_PROCESSES; i++) {
-    let childProcess = childProc.spawn("node", ["child.js", `--url=${URL}`])
+    let childProcess = childProc.spawn("node", ["child.js", `--url=${URL}`]);
     children.push(childProcess);
+
+    childProcess.stdout.on('data', (data) => {
+      const output = data.toString().trim();
+      if (output) {
+        console.log(`Child Process ${i + 1} Output: ${output}`);
+      }
+    });
   }
 
   let responses = children.map(function wait(child) {
     return new Promise(function c(res) {
       let start = performance.now();
-      child.stdout.on('data', (data) => {
-        console.log(`child stdout: ${data}`);
-      });
       child.on("exit", function (code) {
         if (code === 0) {
           let end = performance.now();
