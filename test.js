@@ -2,7 +2,7 @@
 const childProc = require("child_process");
 const { performance } = require('perf_hooks');
 const CHILD_PROCESSES = 20;
-const URL = 'https://northshewadiocese.netlify.app/';
+const URL = 'http://northshewadiocese.netlify.app/';
 
 (async () => {
   let responseTimes = [];
